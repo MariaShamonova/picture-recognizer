@@ -1,9 +1,25 @@
+import cv2
+import numpy as np
 from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtCore import Qt
+from matplotlib import pyplot as plt
 
 _translate = QtCore.QCoreApplication.translate
 
 
-def remove_spacer(self, order=3):
+def clear_blocks(self):
+
+	if self.verticalLayout_5.count() > 4:
+		self.verticalLayout_5.removeItem(self.verticalLayoutWrapper)
+		# self.verticalLayout_5.removeItem(self.verticalLayoutRecievedScore)
+		# self.verticalLayout_5.removeItem(self.label_result)
+		self.verticalLayout_5.removeItem(self.horizontalLayoutAnwers)
+		self.verticalLayout_5.removeItem(self.horizontalLayoutExampleFeatures)
+		self.verticalLayout_5.removeItem(self.verticalLayout_2)
+		self.verticalLayout_5.removeItem(self.horizontalLayout)
+
+
+def remove_spacer(self):
 	self.verticalLayout_5.removeItem(self.spacerItem2)
 
 
@@ -42,92 +58,84 @@ def display_selected_image(self):
 
 	add_spacer(self)
 
-def display_example_features(self):
-	self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-	self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-	self.verticalLayout_7 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_7.setObjectName("verticalLayout_7")
-	self.label_method_1 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_method_1.setObjectName("label_method_1")
-	self.verticalLayout_7.addWidget(self.label_method_1)
-	self.feature_method_1 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.feature_method_1.setMinimumSize(QtCore.QSize(150, 150))
-	self.feature_method_1.setObjectName("feature_method_1")
-	self.verticalLayout_7.addWidget(self.feature_method_1)
-	self.horizontalLayout_3.addLayout(self.verticalLayout_7)
-	self.verticalLayout_13 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_13.setObjectName("verticalLayout_13")
-	self.label_method_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_method_2.setObjectName("label_method_2")
-	self.verticalLayout_13.addWidget(self.label_method_2)
-	self.feature_method_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.feature_method_2.setMinimumSize(QtCore.QSize(150, 150))
-	self.feature_method_2.setObjectName("feature_method_2")
-	self.verticalLayout_13.addWidget(self.feature_method_2)
-	self.horizontalLayout_3.addLayout(self.verticalLayout_13)
-	self.verticalLayout_12 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_12.setObjectName("verticalLayout_12")
-	self.label_method_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_method_3.setObjectName("label_method_3")
-	self.verticalLayout_12.addWidget(self.label_method_3)
-	self.feature_method_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.feature_method_3.setMinimumSize(QtCore.QSize(150, 150))
-	self.feature_method_3.setObjectName("feature_method_3")
-	self.verticalLayout_12.addWidget(self.feature_method_3)
-	self.horizontalLayout_3.addLayout(self.verticalLayout_12)
-	self.verticalLayout_5.addLayout(self.horizontalLayout_3)
+def display_example_features(self, methods):
+	self.horizontalLayoutExampleFeatures = QtWidgets.QHBoxLayout()
+	self.horizontalLayoutExampleFeatures.setObjectName("horizontalLayout_3")
+
+	for method in methods:
+		verticalLayout = QtWidgets.QVBoxLayout()
+
+		label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+		label.setText(_translate("MainWindow", method[0]))
+		verticalLayout.addWidget(label, alignment=Qt.AlignCenter)
+
+		feature_plot = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+		feature_plot.setMinimumSize(QtCore.QSize(150, 150))
+
+		if method[0] != 'WaveletTransform':
+			pixmap = QtGui.QPixmap(method[1]).scaled(330, 330, QtCore.Qt.KeepAspectRatio)
+		else:
+			pixmap = QtGui.QPixmap(method[1])
 
 
-def display_answer_image(self):
-	self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-	self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-	self.verticalLayout_17 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_17.setObjectName("verticalLayout_17")
-	self.label_selected_method_1 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_selected_method_1.setObjectName("label_selected_method_1")
-	self.label_selected_method_1.setText(_translate("MainWindow", "Selected image"))
-	self.verticalLayout_17.addWidget(self.label_selected_method_1)
-	self.selected_image = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.selected_image.setMinimumSize(QtCore.QSize(150, 150))
-	self.selected_image.setObjectName("selected_image")
-	self.verticalLayout_17.addWidget(self.selected_image)
-	self.horizontalLayout_7.addLayout(self.verticalLayout_17)
-	self.verticalLayout_18 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_18.setObjectName("verticalLayout_18")
-	self.label_answer_algorithm = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_answer_algorithm.setObjectName("label_answer_algorithm")
-	self.label_answer_algorithm.setText(_translate("MainWindow", "Answer"))
-	self.verticalLayout_18.addWidget(self.label_answer_algorithm)
-	self.answer_algorithm = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.answer_algorithm.setMinimumSize(QtCore.QSize(150, 150))
-	self.answer_algorithm.setObjectName("answer_algorithm")
-	self.verticalLayout_18.addWidget(self.answer_algorithm)
-	self.horizontalLayout_7.addLayout(self.verticalLayout_18)
-	spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-	self.horizontalLayout_7.addItem(spacerItem3)
-	self.verticalLayout_5.addLayout(self.horizontalLayout_7)
+		feature_plot.setPixmap(pixmap)
+
+		verticalLayout.addWidget(feature_plot)
+		self.horizontalLayoutExampleFeatures.addLayout(verticalLayout)
+
+	self.verticalLayout_5.addLayout(self.horizontalLayoutExampleFeatures)
+
+def create_path_to_image(image):
+	min_val, max_val = image.min(), image.max()
+	image = 255.0 * (image - min_val) / (max_val - min_val)
+	image = image.astype(np.uint8)
+
+	path = 'answer.png'
+	cv2.imwrite(path, image)
+
+	return path
+
+def display_answer_image(self, answers, authors):
+	self.horizontalLayoutAnwers = QtWidgets.QHBoxLayout()
+	for answer in answers:
+
+		verticalLayout = QtWidgets.QVBoxLayout()
+		label_answer = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+		label_answer.setStyleSheet("margin-top: 20px;")
+		label_answer.setText(_translate("MainWindow", "Answer"))
+
+		verticalLayout.addWidget(label_answer)
+		image_answer = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+		image_answer.setMinimumSize(QtCore.QSize(50, 50))
+		label_answer.setText(_translate("MainWindow", authors[answer[0] - 1]))
+
+		verticalLayout.addWidget(image_answer)
+		self.horizontalLayoutAnwers.addLayout(verticalLayout)
+
+	self.horizontalLayoutAnwers.addLayout(verticalLayout)
+	self.verticalLayout_5.addLayout(self.horizontalLayoutAnwers)
 
 
-def display_received_score(self):
-	self.verticalLayout = QtWidgets.QVBoxLayout()
-	self.verticalLayout.setObjectName("verticalLayout")
-	self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-	self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-	self.score_label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.score_label.setMaximumSize(QtCore.QSize(16777215, 30))
-	self.score_label.setStyleSheet("")
-	self.score_label.setObjectName("score_label")
-	self.score_label.setText(_translate("MainWindow", "Score of parallel system"))
+def display_received_score(self, methods):
+	self.verticalLayoutRecievedScore = QtWidgets.QVBoxLayout()
 
-	self.horizontalLayout_2.addWidget(self.score_label)
-	self.score_value = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.score_value.setMaximumSize(QtCore.QSize(16777215, 30))
-	self.score_value.setStyleSheet("")
-	self.score_value.setObjectName("score_value")
-	self.score_value.setText(_translate("MainWindow", "Score"))
-	self.horizontalLayout_2.addWidget(self.score_value)
-	self.verticalLayout.addLayout(self.horizontalLayout_2)
-	self.verticalLayout_5.addLayout(self.verticalLayout)
+	for idx, method in enumerate(methods):
+		horizontalLayout = QtWidgets.QHBoxLayout()
+		self.score_label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+		self.score_label.setMaximumSize(QtCore.QSize(16777215, 30))
+		self.score_label.setObjectName("score_label")
+		self.score_label.setText(_translate("MainWindow", "Score of method " + method + ' for ' + methods[method]['name'] + "=" + str(methods[method]['value'])))
+
+		horizontalLayout.addWidget(self.score_label)
+		self.score_value = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+		self.score_value.setMaximumSize(QtCore.QSize(16777215, 30))
+		self.score_value.setStyleSheet("")
+		self.score_value.setObjectName("score_value")
+		self.score_value.setText(_translate("MainWindow", str(methods[method]['score'])))
+		horizontalLayout.addWidget(self.score_value)
+		self.verticalLayoutRecievedScore.addLayout(horizontalLayout)
+
+	self.verticalLayout_5.addLayout(self.verticalLayoutRecievedScore)
 	self.label_result = QtWidgets.QLabel(self.scrollAreaWidgetContents)
 	self.label_result.setStyleSheet("margin-top: 25px;")
 	self.label_result.setObjectName("label_result")
@@ -135,49 +143,42 @@ def display_received_score(self):
 	self.verticalLayout_5.addWidget(self.label_result)
 
 
-def display_scores(self):
-	self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
-	self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-	self.verticalLayout_14 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_14.setObjectName("verticalLayout_14")
-	self.label_result_method_1 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_result_method_1.setObjectName("label_result_method_1")
-	self.verticalLayout_14.addWidget(self.label_result_method_1)
-	self.parameters_method_1 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.parameters_method_1.setMinimumSize(QtCore.QSize(150, 150))
-	self.parameters_method_1.setObjectName("parameters_method_1")
-	self.verticalLayout_14.addWidget(self.parameters_method_1)
-	self.folds_method_1 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.folds_method_1.setMinimumSize(QtCore.QSize(150, 150))
-	self.folds_method_1.setObjectName("folds_method_1")
-	self.verticalLayout_14.addWidget(self.folds_method_1)
-	self.horizontalLayout_6.addLayout(self.verticalLayout_14)
-	self.verticalLayout_15 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_15.setObjectName("verticalLayout_15")
-	self.label_result_method_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_result_method_2.setObjectName("label_result_method_2")
-	self.verticalLayout_15.addWidget(self.label_result_method_2)
-	self.parameters_method_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.parameters_method_2.setMinimumSize(QtCore.QSize(150, 150))
-	self.parameters_method_2.setObjectName("parameters_method_2")
-	self.verticalLayout_15.addWidget(self.parameters_method_2)
-	self.folds_method_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.folds_method_2.setMinimumSize(QtCore.QSize(150, 150))
-	self.folds_method_2.setObjectName("folds_method_2")
-	self.verticalLayout_15.addWidget(self.folds_method_2)
-	self.horizontalLayout_6.addLayout(self.verticalLayout_15)
-	self.verticalLayout_16 = QtWidgets.QVBoxLayout()
-	self.verticalLayout_16.setObjectName("verticalLayout_16")
-	self.label_result_method_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.label_result_method_3.setObjectName("label_result_method_3")
-	self.verticalLayout_16.addWidget(self.label_result_method_3)
-	self.parameters_method_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.parameters_method_3.setMinimumSize(QtCore.QSize(150, 150))
-	self.parameters_method_3.setObjectName("parameters_method_3")
-	self.verticalLayout_16.addWidget(self.parameters_method_3)
-	self.folds_method_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-	self.folds_method_3.setMinimumSize(QtCore.QSize(150, 150))
-	self.folds_method_3.setObjectName("folds_method_3")
-	self.verticalLayout_16.addWidget(self.folds_method_3)
-	self.horizontalLayout_6.addLayout(self.verticalLayout_16)
-	self.verticalLayout_5.addLayout(self.horizontalLayout_6)
+def build_line_plot(data, name):
+	plt.figure(figsize=(20, 10), dpi=80)
+	ax = plt.gca()
+	plt.xticks(fontsize=50)
+	plt.yticks(fontsize=50)
+	ax.grid(linewidth=5)
+	plt.plot(*zip(*data), linewidth=6)
+	save_path = name + '.png'
+	plt.savefig(save_path)
+
+	return save_path
+
+
+def display_scores(self, scores, titleBlock = 'Точность распознавания'):
+	self.verticalLayoutWrapper = QtWidgets.QVBoxLayout()
+	title = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+	title.setMaximumSize(QtCore.QSize(16777215, 30))
+	title.setText(_translate("MainWindow", titleBlock))
+	self.verticalLayoutWrapper.addWidget(title)
+
+	horizontalLayout = QtWidgets.QHBoxLayout()
+
+	for idx in range(3):
+		verticalLayout = QtWidgets.QVBoxLayout()
+
+		label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+		verticalLayout.addWidget(label)
+
+		chart = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+
+		path_to_line_chart = build_line_plot(scores[idx], 'scores_folds')
+
+		pixmap = QtGui.QPixmap(path_to_line_chart).scaled(310, 300, QtCore.Qt.KeepAspectRatio)
+		chart.setPixmap(pixmap)
+		verticalLayout.addWidget(chart)
+		horizontalLayout.addLayout(verticalLayout)
+
+	self.verticalLayoutWrapper.addLayout(horizontalLayout)
+	self.verticalLayout_5.addLayout(self.verticalLayoutWrapper)

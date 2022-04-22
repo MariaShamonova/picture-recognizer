@@ -3,14 +3,14 @@ import numpy as np
 import pathlib
 
 
-def get_faces_data() -> tuple[np.ndarray, np.ndarray]:
+def get_pictures_data(num_classes: int = 10, num_images: int = 10) -> tuple[np.ndarray, np.ndarray]:
     data_faces = []
     data_target = []
-    data_folder = str(pathlib.Path(__file__).parent.resolve()) + "/faces/s"
+    data_folder = str(pathlib.Path(__file__).parent.resolve()) + "/pictures/s"
 
-    for i in range(1, 41):
-        for j in range(1, 11):
-            image = cv2.cvtColor(cv2.imread(data_folder + str(i) + "/" + str(j) + ".bmp"), cv2.COLOR_BGR2GRAY)
+    for i in range(1, num_classes + 1):
+        for j in range(1, num_images + 1):
+            image = cv2.cvtColor(cv2.imread(data_folder + str(i) + "/" + str(j) + ".jpeg"), cv2.COLOR_BGR2GRAY)
             data_faces.append(image / 255)
             data_target.append(i)
 
@@ -75,5 +75,28 @@ def split_data_for_cross_validation(train_data: np.ndarray, target_data: np.ndar
 
         yield x_train, y_train, x_test, y_test
 
+
+def zig_zag_transform(block):
+    zigzag = []
+
+    for index in range(1, len(block) + 1):
+        slice = [i[:index] for i in block[:index]]
+
+        diag = [slice[i][len(slice)-i-1] for i in range(len(slice))]
+
+        if len(diag) % 2:
+            diag.reverse()
+        zigzag += diag
+    for index in reversed(range(1, len(block))):
+        slice = [i[:index] for i in block[:index]]
+
+        diag = [block[len(block) - index + i][len(block) - i - 1]
+                for i in range(len(slice))]
+
+        if len(diag) % 2:
+            diag.reverse()
+        zigzag += diag
+
+    return zigzag
 
 
