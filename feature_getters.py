@@ -39,7 +39,7 @@ class Haralick(FeatureGetter):
     num_pc: int = 24
 
     def plot(self, image: np.ndarray) -> bytes:
-        gaussian = mahotas.gaussian_filter(image, 24)
+        gaussian = mahotas.gaussian_filter(image, self.num_pc)
         gaussian = (gaussian > gaussian.mean())
         labelled, n = mahotas.label(gaussian)
         features = mahotas.features.haralick(labelled).mean(axis=0)
@@ -65,7 +65,7 @@ class Haralick(FeatureGetter):
         return features
 
     def get_teach_param(self, image=None):
-        return range(1, 120, 10)
+        return range(1, 20)
 
     def set_param(self, num_pc: int):
         self.num_pc = num_pc

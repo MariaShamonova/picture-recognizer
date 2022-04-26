@@ -22,7 +22,8 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
         self.methods = {
             'WaveletTransform': {'name': 'step', 'value': 5},
             'PCAanalisys': {'name': 'P/Q', 'value': 20},
-            'Haralick': {'name': 'P/D', 'value': 10}
+            'Haralick': {'name': 'P/D', 'value': 10},
+            # 'Random': {'name': 'Num pixels', 'value': 10},
         }
 
         self.authors = ['Pablo Picasso', 'Sandro Botticelli', 'Vincent van Gogh', 'Ilya Repin',
